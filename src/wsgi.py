@@ -18,7 +18,7 @@ def gae_xmpp(environ, start_response):
     content_type = environ['CONTENT_TYPE']
     content_type_boundary = re.search(r'boundary="(.+?)"', content_type).group(1)
     data = environ['wsgi.input'].read()
-    params = dict(m.group(1, 2) for m in (re.search('name="(\\w+)"\r\n\r\n(.+?)$', x.strip('\r\n-')) for x in re.split(content_type_boundary, data)) if m)
+    params = dict(m.group(1, 2) for m in (re.search('name="(\\w+)"\r\n\r\n(.+?)$', x.strip('\r\n-')) for x in data.split(content_type_boundary)) if m)
     logging.info('xmpp receive params=%s', params)
     message = xmpp.Message(params)
     message.reply(message.body)
